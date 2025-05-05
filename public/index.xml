@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>John Mackenzie | Software Engineer</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on John Mackenzie | Software Engineer</description>
+    <generator>Hugo -- 0.129.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 12 Apr 2025 10:14:05 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How I Use Mutation Testing</title>
+      <link>http://localhost:1313/posts/how-i-use-mutation-testing/</link>
+      <pubDate>Sat, 12 Apr 2025 10:14:05 +0000</pubDate>
+      <guid>http://localhost:1313/posts/how-i-use-mutation-testing/</guid>
+      <description>I have recently began using mutation testing as a Pre-Refactor Safety Net.
+The process looks like this;
+Choose the package that I want to refactor. Run mutation testing on that module. OPTIONAL: save this report for comparison later. If any mutants survive the test suite is not tight enough. Write additional unit tests to cover Continue this until all mutants are killed or that kill rate is suitably high. Open PR.</description>
+    </item>
+    <item>
+      <title>Upgrading Storage on Longhorn Node</title>
+      <link>http://localhost:1313/posts/upgrading-storage-on-longhorn-node/</link>
+      <pubDate>Sun, 19 Jan 2025 10:14:05 +0000</pubDate>
+      <guid>http://localhost:1313/posts/upgrading-storage-on-longhorn-node/</guid>
+      <description>One of my Longhorn nodes has ran out of storage. I only have a 250GB SSD on it at the moment and need to upgrade it with a 1TB SSD.
+I am going to remove the node from the cluster. Replace the SSD, readd the node to the cluster and begin replication.
+Here are the steps that I took;
+Drain the Node Mark the node as unschedulable to prevent new workloads from being scheduled and drain existing workloads.</description>
+    </item>
+    <item>
+      <title>Explicit or Exception? My thoughts on Error Handling</title>
+      <link>http://localhost:1313/posts/explicite-or-exception-my-thoughts-on-error-handling/</link>
+      <pubDate>Tue, 03 Dec 2024 10:14:05 +0000</pubDate>
+      <guid>http://localhost:1313/posts/explicite-or-exception-my-thoughts-on-error-handling/</guid>
+      <description>In computer programming, explicit error handling and exception error handling are two approaches to signaling an error or problem during the runtime of a computer program.
+Here is a breakdown of the two;
+Explicit Error Handling This approach requires that errors are returned as values from a method, usually as an object or code. The calling code then makes the decision on how to react based on the returned value or object.</description>
+    </item>
+    <item>
+      <title>All Longhorn replicas are faulted</title>
+      <link>http://localhost:1313/posts/all-longhorn-replicas-are-faulted/</link>
+      <pubDate>Tue, 03 Dec 2024 09:26:05 +0000</pubDate>
+      <guid>http://localhost:1313/posts/all-longhorn-replicas-are-faulted/</guid>
+      <description>Today my homelab has a total outage. All nodes went down together. Resilience is further down the line &amp;#x1f600;.
+In my longhorn UI it was saying that the Replicas wereFailed.
+I found the following solution brought back all of my longhorn replicas with data in tact;
+Find the ID of the PVC that has failed Stop all resources that are using that PVC. Edit the replicas.longhorn.io resource for the relevant PVC ID $ kubectl -n longhorn-system edit replicas.</description>
+    </item>
+    <item>
+      <title>Migration of Longhorn Volume access modes</title>
+      <link>http://localhost:1313/posts/migration-of-longhorn-volume-access-modes/</link>
+      <pubDate>Wed, 24 Jan 2024 10:14:05 +0000</pubDate>
+      <guid>http://localhost:1313/posts/migration-of-longhorn-volume-access-modes/</guid>
+      <description>I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.
+Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3.</description>
+    </item>
+    <item>
+      <title>Format an HDD for use as a Longhorn Drive</title>
+      <link>http://localhost:1313/posts/format-an-hdd-for-use-as-a-longhorn-drive/</link>
+      <pubDate>Mon, 22 Jan 2024 10:14:05 +0000</pubDate>
+      <guid>http://localhost:1313/posts/format-an-hdd-for-use-as-a-longhorn-drive/</guid>
+      <description>I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.
+Identify the Disk Run the following command to list all disks:
+lsblk Identify the target HDD you want to format (e.g., /dev/sdb).
+Partition the Disk Launch fdisk to partition the disk:
+sudo fdisk /dev/sdb Inside fdisk run:
+Press d to delete any existing partitions (if any). Press n to create a new partition.</description>
+    </item>
+  </channel>
+</rss>

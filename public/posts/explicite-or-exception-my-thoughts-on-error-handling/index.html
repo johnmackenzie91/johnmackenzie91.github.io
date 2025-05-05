@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Explicit or Exception? My thoughts on Error Handling | John Mackenzie | Software Engineer</title>
+<meta name="keywords" content="">
+<meta name="description" content="In computer programming, explicit error handling and exception error handling are two approaches to signaling an error or problem during the runtime of a computer program.
+Here is a breakdown of the two;
+Explicit Error Handling This approach requires that errors are returned as values from a method, usually as an object or code. The calling code then makes the decision on how to react based on the returned value or object.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/explicite-or-exception-my-thoughts-on-error-handling/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/explicite-or-exception-my-thoughts-on-error-handling/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Explicit or Exception? My thoughts on Error Handling
+    </h1>
+    <div class="post-meta"><span title='2024-12-03 10:14:05 +0000 UTC'>December 3, 2024</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>In computer programming, explicit error handling and exception error handling are two approaches to signaling an error or problem during the runtime of a computer program.</p>
+<p>Here is a breakdown of the two;</p>
+<h2 id="explicit-error-handling">Explicit Error Handling<a hidden class="anchor" aria-hidden="true" href="#explicit-error-handling">#</a></h2>
+<p>This approach requires that errors are returned as values from a method, usually as an object or code. The calling code then makes the decision on how to react based on the returned value or object.</p>
+<h3 id="advantages">Advantages:<a hidden class="anchor" aria-hidden="true" href="#advantages">#</a></h3>
+<ul>
+<li>Visibility and predictability: It makes error-handling logic explicit and predictable since the error is directly returned by the method.</li>
+<li>Encourages thoughtful handling: This approach encourages developers to think about error cases explicitly at every point in the program and respond appropriately.</li>
+<li>Works well in procedural contexts: In procedural code, where execution flows step by step, explicit error handling aligns naturally as each operation is clearly defined.</li>
+</ul>
+<h3 id="disadvantages">Disadvantages:<a hidden class="anchor" aria-hidden="true" href="#disadvantages">#</a></h3>
+<ul>
+<li>Repetitiveness: It can become repetitive, requiring constant checks for returned errors.</li>
+</ul>
+<h2 id="exception-error-handling">Exception Error handling<a hidden class="anchor" aria-hidden="true" href="#exception-error-handling">#</a></h2>
+<p>This approach uses a specialised exception mechanism built into the language to signal and handle errors. Errors are &ldquo;thrown&rdquo; or &ldquo;raised&rdquo; and are expected to be caught by a try/catch block in the calling code.</p>
+<h3 id="advantages-1">Advantages:<a hidden class="anchor" aria-hidden="true" href="#advantages-1">#</a></h3>
+<ul>
+<li>Improved readability: Separating error-handling logic from the main program logic makes the code cleaner and easier to follow, especially in complex systems.</li>
+<li>Centralised handling: Exceptions can be handled at a higher level in the program, reducing repetitive error-handling code.</li>
+</ul>
+<h3 id="disadvantages-1">Disadvantages:<a hidden class="anchor" aria-hidden="true" href="#disadvantages-1">#</a></h3>
+<ul>
+<li>Implicit error signaling: It’s not always clear which methods can throw errors, making it easier for exceptions to go unhandled.</li>
+<li>Runtime surprises: If exceptions are not properly caught, they can propagate and crash the program unexpectedly.</li>
+</ul>
+<h2 id="final-thoughts">Final Thoughts<a hidden class="anchor" aria-hidden="true" href="#final-thoughts">#</a></h2>
+<p>In a procedural context explicit error handling wins hands down.  With explicit error returns, I can immediately see which method returns an error, and I can decide there an then how I wish to response to said error. Unlike exception handling, where errors are often thrown far from where they are caught, explicit error handling keeps everything close to the source, making the flow of execution predictable and transparent. It eliminates the need for a distant catch blocks and avoids the complexity of error propagation, allowing for more maintainable and understandable code. In procedural code, error handling should be explicit, local, and as simple as possible to keep the code clean and easy to maintain.</p>
+<p>In Object-Oriented Programming, I again prefer explicit error handling because it allows me to make clear, conscious decisions on how to handle errors at each level; whether to retry an operation, take an alternative flow, log or ignore the error completely. One could argue that handling errors at every level creates clutter, I would say that each level in a service chain often requires different strategies to address specific failure conditions or at the very least allows one to add additional context to error before handing it back the the calling code. The &ldquo;clutter&rdquo; created by these error checks should be kept to a minimum by using patterns to avoid code duplication.</p>
+<p>For asynchronous programming I prefer throwing exceptions. My main experience with asynchronous programming comes from either a typescript component or running asynchronous go routines. Asynchronous code is decentralised by its very nature and because of this I find it advantageous to have the execution handling in a centralised place over sending an error on a channel and ensure that everything is listening as it should.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

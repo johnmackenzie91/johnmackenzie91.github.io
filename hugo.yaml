@@ -1,0 +1,23 @@
+---
+title: "John Mackenzie | Software Engineer"
+layout: "search" # is necessary
+# description: "Description for Search"
+summary: "search"
+placeholder: "start typing here ..."
+
+baseURL: 'https://example.org/'
+languageCode: 'en-us'
+theme: 'PaperMod'
+enableEmoji: true
+
+params:
+  homeInfoParams:
+    title: Golang Engineer and HomeLab Tinkerer.
+    Content: This is my personal blog....
+  socialIcons:
+    - name: github
+      url: "https://github.com/johnmackenzie91"
+    - name: linkedin
+      url: "https://www.linkedin.com/in/john-mackenzie-web-developer/"
+
+---

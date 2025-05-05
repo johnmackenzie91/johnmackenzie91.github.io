@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Posts | John Mackenzie | Software Engineer</title>
+<meta name="keywords" content="">
+<meta name="description" content="Posts - John Mackenzie | Software Engineer">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/posts/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Posts
+  </h1>
+</header>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">How I Use Mutation Testing
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I have recently began using mutation testing as a Pre-Refactor Safety Net.
+The process looks like thus;
+Choose the package that I want to refactor. Run mutation testing on that module. OPTIONAL: save this report for comparison later. If any mutants survive the test suite is not tight enough. Write additional unit tests to cover Continue this until all mutants are killed or that kill rate is suitably high. Open PR....</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-04-12 10:14:05 +0000 UTC'>April 12, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to How I Use Mutation Testing" href="http://localhost:1313/posts/how-i-use-mutation-testing/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Upgrading Storage on Longhorn Node
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>One of my Longhorn nodes has ran out of storage. I only have a 250GB SSD on it at the moment and need to upgrade it with a 1TB SSD.
+I am going to remove the node from the cluster. Replace the SSD, readd the node to the cluster and begin replication.
+Here are the steps that I took;
+Drain the Node Mark the node as unschedulable to prevent new workloads from being scheduled and drain existing workloads....</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-01-19 10:14:05 +0000 UTC'>January 19, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Upgrading Storage on Longhorn Node" href="http://localhost:1313/posts/upgrading-storage-on-longhorn-node/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Explicit or Exception? My thoughts on Error Handling
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>In computer programming, explicit error handling and exception error handling are two approaches to signaling an error or problem during the runtime of a computer program.
+Here is a breakdown of the two;
+Explicit Error Handling This approach requires that errors are returned as values from a method, usually as an object or code. The calling code then makes the decision on how to react based on the returned value or object....</p>
+  </div>
+  <footer class="entry-footer"><span title='2024-12-03 10:14:05 +0000 UTC'>December 3, 2024</span></footer>
+  <a class="entry-link" aria-label="post link to Explicit or Exception? My thoughts on Error Handling" href="http://localhost:1313/posts/explicite-or-exception-my-thoughts-on-error-handling/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">All Longhorn replicas are faulted
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Today my homelab has a total outage. All nodes went down together. Resilience is further down the line 😀.
+In my longhorn UI it was saying that the Replicas wereFailed.
+I found the following solution brought back all of my longhorn replicas with data in tact;
+Find the ID of the PVC that has failed Stop all resources that are using that PVC. Edit the replicas.longhorn.io resource for the relevant PVC ID $ kubectl -n longhorn-system edit replicas....</p>
+  </div>
+  <footer class="entry-footer"><span title='2024-12-03 09:26:05 +0000 UTC'>December 3, 2024</span></footer>
+  <a class="entry-link" aria-label="post link to All Longhorn replicas are faulted" href="http://localhost:1313/posts/all-longhorn-replicas-are-faulted/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Migration of Longhorn Volume access modes
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.
+Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3....</p>
+  </div>
+  <footer class="entry-footer"><span title='2024-01-24 10:14:05 +0000 UTC'>January 24, 2024</span></footer>
+  <a class="entry-link" aria-label="post link to Migration of Longhorn Volume access modes" href="http://localhost:1313/posts/migration-of-longhorn-volume-access-modes/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Format an HDD for use as a Longhorn Drive
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.
+Identify the Disk Run the following command to list all disks:
+lsblk Identify the target HDD you want to format (e.g., /dev/sdb).
+Partition the Disk Launch fdisk to partition the disk:
+sudo fdisk /dev/sdb Inside fdisk run:
+Press d to delete any existing partitions (if any). Press n to create a new partition....</p>
+  </div>
+  <footer class="entry-footer"><span title='2024-01-22 10:14:05 +0000 UTC'>January 22, 2024</span></footer>
+  <a class="entry-link" aria-label="post link to Format an HDD for use as a Longhorn Drive" href="http://localhost:1313/posts/format-an-hdd-for-use-as-a-longhorn-drive/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

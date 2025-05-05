@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title> Setting Up Longhorn with Block Storage on My HA K3s Cluster | John Mackenzie | Software Engineer</title>
+<meta name="keywords" content="">
+<meta name="description" content="Introduction
+As part of my journey to build a high-availability (HA) k3s cluster, I decided to use Longhorn for persistent storage. While exploring the best storage configuration, I learned about the advantages of using block storage over filesystem storage. Here’s a detailed guide on how I prepared my disk for Longhorn and configured it to use raw block storage for maximum performance.
+Why Block Storage? After some research, I found that Longhorn supports two types of storage: filesystem and block.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/-setting-up-longhorn-with-block-storage-on-my-ha-k3s-cluster/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/-setting-up-longhorn-with-block-storage-on-my-ha-k3s-cluster/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+       Setting Up Longhorn with Block Storage on My HA K3s Cluster
+    </h1>
+    <div class="post-meta"><span title='2025-02-17 09:26:05 +0000 UTC'>February 17, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Introduction</strong><br>
+As part of my journey to build a high-availability (HA) k3s cluster, I decided to use Longhorn for persistent storage. While exploring the best storage configuration, I learned about the advantages of using block storage over filesystem storage. Here’s a detailed guide on how I prepared my disk for Longhorn and configured it to use raw block storage for maximum performance.</p>
+<hr>
+<h3 id="why-block-storage"><strong>Why Block Storage?</strong><a hidden class="anchor" aria-hidden="true" href="#why-block-storage">#</a></h3>
+<p>After some research, I found that Longhorn supports two types of storage: <code>filesystem</code> and <code>block</code>. Here’s why I chose block storage:</p>
+<ul>
+<li>🚀 <strong>Better Performance:</strong> Direct I/O access to raw disks without filesystem overhead.</li>
+<li>💾 <strong>Efficient Space Utilization:</strong> No file system means Longhorn fully manages the storage.</li>
+<li>🛡️ <strong>Improved Reliability:</strong> Reduces risk of file system corruption.</li>
+<li>📈 <strong>Scalability:</strong> Better suited for high IOPS workloads like databases.</li>
+</ul>
+<hr>
+<h3 id="checking-my-disk-type"><strong>Checking My Disk Type</strong><a hidden class="anchor" aria-hidden="true" href="#checking-my-disk-type">#</a></h3>
+<p>I inspected my node’s storage configuration with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>lsblk -f
+</span></span></code></pre></div><p>I found <code>/dev/sda</code> was formatted with <code>ext4</code>, so I needed to wipe it for block storage.</p>
+<hr>
+<h3 id="wiping-the-disk-for-block-storage"><strong>Wiping the Disk for Block Storage</strong><a hidden class="anchor" aria-hidden="true" href="#wiping-the-disk-for-block-storage">#</a></h3>
+<p>I prepared the disk for block storage with the following commands:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo umount /dev/sda <span style="color:#f92672">||</span> true
+</span></span><span style="display:flex;"><span>sudo wipefs --all /dev/sda
+</span></span><span style="display:flex;"><span>sudo dd <span style="color:#66d9ef">if</span><span style="color:#f92672">=</span>/dev/zero of<span style="color:#f92672">=</span>/dev/sda bs<span style="color:#f92672">=</span>1M count<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> oflag<span style="color:#f92672">=</span>direct,dsync
+</span></span><span style="display:flex;"><span>sudo blkdiscard /dev/sda <span style="color:#f92672">||</span> true
+</span></span><span style="display:flex;"><span>sudo parted /dev/sda --script mklabel gpt
+</span></span><span style="display:flex;"><span>lsblk -f /dev/sda
+</span></span></code></pre></div><p>The disk now showed no <code>FSTYPE</code>, confirming it was a raw block device.</p>
+<h3 id="format-disk-and-mount-disk">Format Disk and Mount Disk<a hidden class="anchor" aria-hidden="true" href="#format-disk-and-mount-disk">#</a></h3>
+<p>Format and Mount the Disk (if needed):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkfs.ext4 /dev/sda
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkdir -p /mnt/longhorn/disk1
+</span></span></code></pre></div><p>Mount the disk</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mount /dev/sda /mnt/longhorn/disk1
+</span></span></code></pre></div><p>Ensure it mounts on reboot: Add to /etc/fstab:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;/dev/sda /mnt/longhorn/disk1 ext4 defaults 0 2&#34;</span> | sudo tee -a /etc/fstab
+</span></span></code></pre></div><p>Ensure fstab is configured correctly with;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mount -a
+</span></span></code></pre></div><hr>
+<h3 id="configuring-longhorn-to-use-the-block-disk"><strong>Configuring Longhorn to Use the Block Disk</strong><a hidden class="anchor" aria-hidden="true" href="#configuring-longhorn-to-use-the-block-disk">#</a></h3>
+<h4 id="option-a-longhorn-ui"><strong>Option A: Longhorn UI</strong><a hidden class="anchor" aria-hidden="true" href="#option-a-longhorn-ui">#</a></h4>
+<p>In the Longhorn UI, I added the disk under <strong>Node and Disk Management</strong> with:</p>
+<ul>
+<li><strong>Path:</strong> <code>/dev/sda</code></li>
+<li><strong>Storage Type:</strong> <code>block</code></li>
+<li><strong>Allow Scheduling:</strong> <code>true</code></li>
+</ul>
+<h4 id="option-b-helm-values-file"><strong>Option B: Helm Values File</strong><a hidden class="anchor" aria-hidden="true" href="#option-b-helm-values-file">#</a></h4>
+<p>I updated <code>values.yaml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">longhorn</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">nodes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">node-master-1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">disks</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">sda</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/dev/sda</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">allowScheduling</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">storageReserved</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">tags</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#ae81ff">fast-storage</span>
+</span></span></code></pre></div><p>Then deployed with Helm:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>helm upgrade --install longhorn longhorn/longhorn <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --namespace longhorn-system <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -f values.yaml
+</span></span></code></pre></div><hr>
+<h3 id="final-verification"><strong>Final Verification</strong><a hidden class="anchor" aria-hidden="true" href="#final-verification">#</a></h3>
+<p>I verified everything was working with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get nodes.longhorn.io -n longhorn-system
+</span></span><span style="display:flex;"><span>kubectl get disks.longhorn.io -n longhorn-system
+</span></span></code></pre></div><p>Everything looked great!</p>
+<hr>
+<h3 id="conclusion"><strong>Conclusion</strong><a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h3>
+<p>By preparing <code>/dev/sda</code> as a raw block device and auto-mounting it without a filesystem via <code>/etc/fstab</code>, I ensured my HA k3s cluster has a reliable, high-performance storage backend. Longhorn with block storage offers excellent performance and scalability. If you’re setting up Longhorn, I highly recommend using block storage for dedicated disks.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
