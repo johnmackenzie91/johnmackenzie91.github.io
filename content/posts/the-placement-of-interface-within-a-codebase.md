@@ -1,7 +1,6 @@
 +++
 title = 'The Placement of Interface Within a Codebase'
 date = 2025-07-04T19:13:06+01:00
-draft = true
 +++
 
 

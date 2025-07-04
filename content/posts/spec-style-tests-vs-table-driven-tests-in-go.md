@@ -1,7 +1,6 @@
 +++
 title = 'Spec Style Tests vs Table Driven Tests in Go'
 date = 2025-07-04T20:10:59+01:00
-draft = true
 +++
 
 ### Spec-Style Tests vs Table-Driven Tests in Go
