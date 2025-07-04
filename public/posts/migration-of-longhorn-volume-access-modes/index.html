@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Migration of Longhorn Volume access modes | John Mackenzie | Software Engineer</title>
 <meta name="keywords" content="">
 <meta name="description" content="I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.
 Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/migration-of-longhorn-volume-access-modes/">
+<link rel="canonical" href="https://johnmackenzie91.github.io/posts/migration-of-longhorn-volume-access-modes/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://johnmackenzie91.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://johnmackenzie91.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://johnmackenzie91.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://johnmackenzie91.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://johnmackenzie91.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/migration-of-longhorn-volume-access-modes/">
+<link rel="alternate" hreflang="en" href="https://johnmackenzie91.github.io/posts/migration-of-longhorn-volume-access-modes/">
 <noscript>
     <style>
         #theme-toggle,
@@ -57,6 +57,73 @@ Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: s
 
     </style>
 </noscript>
+  
+
+<meta property="og:url" content="https://johnmackenzie91.github.io/posts/migration-of-longhorn-volume-access-modes/">
+  <meta property="og:site_name" content="John Mackenzie | Software Engineer">
+  <meta property="og:title" content="Migration of Longhorn Volume access modes">
+  <meta property="og:description" content="I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.
+Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-01-24T10:14:05+00:00">
+    <meta property="article:modified_time" content="2024-01-24T10:14:05+00:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Migration of Longhorn Volume access modes">
+<meta name="twitter:description" content="I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.
+Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://johnmackenzie91.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Migration of Longhorn Volume access modes",
+      "item": "https://johnmackenzie91.github.io/posts/migration-of-longhorn-volume-access-modes/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Migration of Longhorn Volume access modes",
+  "name": "Migration of Longhorn Volume access modes",
+  "description": "I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.\nCreate a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3.",
+  "keywords": [
+    
+  ],
+  "articleBody": "I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.\nCreate a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3.1.3 command: [\"rsync\", \"-ahv\", \"--progress\", \"--delete\", \"--ignore-existing\", \"/mnt/old/\", \"/mnt/new/\"] volumeMounts: - mountPath: /mnt/old name: old-volume - mountPath: /mnt/new name: new-volume volumes: - name: old-volume persistentVolumeClaim: claimName: some-data-persistent-volume-claim - name: new-volume persistentVolumeClaim: claimName: some-data-2-persistent-volume-claim This pod attach the two volumes, and uses rsync to move data from the old to the new.\nUnmount and Update Deployment Once the data copy is complete remove the pod. Then scale down the deployment using the old volume to release the old PVC. Update the deployment to use the new PVC with the ReadWriteMany volume.\nVerify \u0026 Cleanup Important Considerations: There will do downtime as we switch out the PVC. Not a problem for me and my homelab. Also check that there is enough storage available. Start with having the new pvc with one replica and scale from there\n",
+  "wordCount" : "230",
+  "inLanguage": "en",
+  "datePublished": "2024-01-24T10:14:05Z",
+  "dateModified": "2024-01-24T10:14:05Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://johnmackenzie91.github.io/posts/migration-of-longhorn-volume-access-modes/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "John Mackenzie | Software Engineer",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://johnmackenzie91.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -74,7 +141,7 @@ Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: s
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <a href="https://johnmackenzie91.github.io/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -181,7 +248,7 @@ Also check that there is enough storage available. Start with having the new pvc
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
+        <span>&copy; 2025 <a href="https://johnmackenzie91.github.io/">John Mackenzie | Software Engineer</a></span> · 
 
     <span>
         Powered by

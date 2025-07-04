@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Format an HDD for use as a Longhorn Drive | John Mackenzie | Software Engineer</title>
 <meta name="keywords" content="">
 <meta name="description" content="I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.
@@ -14,16 +14,16 @@ Partition the Disk Launch fdisk to partition the disk:
 sudo fdisk /dev/sdb Inside fdisk run:
 Press d to delete any existing partitions (if any). Press n to create a new partition.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/format-an-hdd-for-use-as-a-longhorn-drive/">
+<link rel="canonical" href="https://johnmackenzie91.github.io/posts/format-an-hdd-for-use-as-a-longhorn-drive/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://johnmackenzie91.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://johnmackenzie91.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://johnmackenzie91.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://johnmackenzie91.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://johnmackenzie91.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/format-an-hdd-for-use-as-a-longhorn-drive/">
+<link rel="alternate" hreflang="en" href="https://johnmackenzie91.github.io/posts/format-an-hdd-for-use-as-a-longhorn-drive/">
 <noscript>
     <style>
         #theme-toggle,
@@ -61,6 +61,81 @@ Press d to delete any existing partitions (if any). Press n to create a new part
 
     </style>
 </noscript>
+  
+
+<meta property="og:url" content="https://johnmackenzie91.github.io/posts/format-an-hdd-for-use-as-a-longhorn-drive/">
+  <meta property="og:site_name" content="John Mackenzie | Software Engineer">
+  <meta property="og:title" content="Format an HDD for use as a Longhorn Drive">
+  <meta property="og:description" content="I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.
+Identify the Disk Run the following command to list all disks:
+lsblk Identify the target HDD you want to format (e.g., /dev/sdb).
+Partition the Disk Launch fdisk to partition the disk:
+sudo fdisk /dev/sdb Inside fdisk run:
+Press d to delete any existing partitions (if any). Press n to create a new partition.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-01-22T10:14:05+00:00">
+    <meta property="article:modified_time" content="2024-01-22T10:14:05+00:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Format an HDD for use as a Longhorn Drive">
+<meta name="twitter:description" content="I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.
+Identify the Disk Run the following command to list all disks:
+lsblk Identify the target HDD you want to format (e.g., /dev/sdb).
+Partition the Disk Launch fdisk to partition the disk:
+sudo fdisk /dev/sdb Inside fdisk run:
+Press d to delete any existing partitions (if any). Press n to create a new partition.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://johnmackenzie91.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Format an HDD for use as a Longhorn Drive",
+      "item": "https://johnmackenzie91.github.io/posts/format-an-hdd-for-use-as-a-longhorn-drive/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Format an HDD for use as a Longhorn Drive",
+  "name": "Format an HDD for use as a Longhorn Drive",
+  "description": "I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.\nIdentify the Disk Run the following command to list all disks:\nlsblk Identify the target HDD you want to format (e.g., /dev/sdb).\nPartition the Disk Launch fdisk to partition the disk:\nsudo fdisk /dev/sdb Inside fdisk run:\nPress d to delete any existing partitions (if any). Press n to create a new partition.",
+  "keywords": [
+    
+  ],
+  "articleBody": "I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.\nIdentify the Disk Run the following command to list all disks:\nlsblk Identify the target HDD you want to format (e.g., /dev/sdb).\nPartition the Disk Launch fdisk to partition the disk:\nsudo fdisk /dev/sdb Inside fdisk run:\nPress d to delete any existing partitions (if any). Press n to create a new partition. Choose p for a primary partition. Press Enter to accept the default partition size (use the entire disk). Press t to set the partition type, and choose 8e for Linux LVM (recommended for Longhorn). Press w to write changes and exit. Create a Filesystem Longhorn typically works best with a filesystem like ext4 or xfs. Here, we’ll use ext4:\nsudo mkfs.ext4 /dev/sda Label the Partition Assign a meaningful label to the disk to make it easier to manage:\nsudo e2label /dev/sda longhorn Mount the Disk sudo mkdir /mnt/longhorn sudo mount /dev/sda /mnt/longhorn df -h | grep longhorn Add the Disk to Longhorn Ensure Longhorn is running in your Kubernetes cluster. Navigate to the Longhorn UI. Add the disk under the Settings → Node \u0026 Disk section: Specify the disk path (e.g., /mnt/longhorn). Set it as Schedulable. Ensure Proper Permissions Set the necessary permissions for Longhorn to access the disk:\nsudo chmod -R 777 /mnt/longhorn Finally. Ensure the drive is mounted automatically on startup. Identify the Drive’s UUID The UUID (Universally Unique Identifier) ensures consistent identification of the drive. Run the following command to find the UUID of the partition:\nsudo blkid /dev/sda Edit /etc/fstab Open /etc/fstab and add the drive configuration.\nsudo nano /etc/fstab Something like\nUUID=123e4567-e89b-12d3-a456-426614174000 /mnt/longhorn ext4 defaults 0 2 Test the Configuration It is very important to test the configuration. Why? If there is a problem you will not know until the next time your machine reboots!\nsudo mount -a Any errors will be output to stout.\n",
+  "wordCount" : "322",
+  "inLanguage": "en",
+  "datePublished": "2024-01-22T10:14:05Z",
+  "dateModified": "2024-01-22T10:14:05Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://johnmackenzie91.github.io/posts/format-an-hdd-for-use-as-a-longhorn-drive/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "John Mackenzie | Software Engineer",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://johnmackenzie91.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -78,7 +153,7 @@ Press d to delete any existing partitions (if any). Press n to create a new part
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <a href="https://johnmackenzie91.github.io/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -205,7 +280,7 @@ Run the following command to find the UUID of the partition:</p>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
+        <span>&copy; 2025 <a href="https://johnmackenzie91.github.io/">John Mackenzie | Software Engineer</a></span> · 
 
     <span>
         Powered by

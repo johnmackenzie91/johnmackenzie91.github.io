@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>Tags | John Mackenzie | Software Engineer</title>
+<meta name="robots" content="noindex, nofollow">
+<title>The Placement of Interface Within a Codebase | John Mackenzie | Software Engineer</title>
 <meta name="keywords" content="">
-<meta name="description" content="">
+<meta name="description" content="The definition of an interface should be in the location of where it is required not where it is implemented.
+Defining the interface next to the implementing functionality improves the readability of that functionality. You know that the calling code calls the methods described on the adjacent interface. If you are sure to have followed the Interface Segregation Principle you can also be sure of the exact methods used by the calling code.">
 <meta name="author" content="">
-<link rel="canonical" href="https://johnmackenzie91.github.io/tags/">
+<link rel="canonical" href="http://localhost:1313/posts/the-placement-of-interface-within-a-codebase/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://johnmackenzie91.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://johnmackenzie91.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://johnmackenzie91.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://johnmackenzie91.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://johnmackenzie91.github.io/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="https://johnmackenzie91.github.io/tags/index.xml">
-<link rel="alternate" hreflang="en" href="https://johnmackenzie91.github.io/tags/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/the-placement-of-interface-within-a-codebase/">
 <noscript>
     <style>
         #theme-toggle,
@@ -57,20 +57,9 @@
 
     </style>
 </noscript>
-  
-
-<meta property="og:url" content="https://johnmackenzie91.github.io/tags/">
-  <meta property="og:site_name" content="John Mackenzie | Software Engineer">
-  <meta property="og:title" content="Tags">
-  <meta property="og:locale" content="en-us">
-  <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tags">
-<meta name="twitter:description" content="">
-
 </head>
 
-<body class="list" id="top">
+<body class="" id="top">
 <script>
     if (localStorage.getItem("pref-theme") === "dark") {
         document.body.classList.add('dark');
@@ -85,7 +74,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://johnmackenzie91.github.io/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -114,16 +103,41 @@
     </nav>
 </header>
 <main class="main">
-<header class="page-header">
-    <h1>Tags</h1>
-</header>
 
-<ul class="terms-tags">
-</ul>
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      The Placement of Interface Within a Codebase
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h1>
+    <div class="post-meta"><span title='2025-07-04 19:13:06 +0100 BST'>July 4, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>The definition of an interface should be in the location of where it is required not where it is implemented.</p>
+<p>Defining the interface next to the implementing functionality improves the readability of that functionality. You know that the calling code calls the methods described on the adjacent interface. If you are sure to have followed the Interface Segregation Principle you can also be sure of the exact methods used by the calling code.</p>
+<p>The Interface Segregation Principle states;</p>
+<p><code>&quot;Clients should not be forced to depend on interfaces they do not use.&quot;</code></p>
+<p>The only time I break this rule is when an identical interface is required in three or more places within a codebase. In times like this I would take the DRYness over the principles.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="https://johnmackenzie91.github.io/">John Mackenzie | Software Engineer</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
 
     <span>
         Powered by

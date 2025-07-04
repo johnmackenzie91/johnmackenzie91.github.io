@@ -5,7 +5,7 @@ layout: "search" # is necessary
 summary: "search"
 placeholder: "start typing here ..."
 
-baseURL: 'https://example.org/'
+baseURL: 'https://johnmackenzie91.github.io/'
 languageCode: 'en-us'
 theme: 'PaperMod'
 enableEmoji: true
