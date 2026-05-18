@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Fixing Private DNS Resolution in k3s: When Your Home Router Knows But CoreDNS Doesnt | John Mackenzie | Software Engineer</title>
+<meta name="keywords" content="">
+<meta name="description" content="If you&rsquo;re running a homelab k3s cluster and have custom DNS entries on your home router — perhaps for a self-hosted service like Authentik — you may have run into this frustrating error:
+dial tcp: lookup authentik.myexample.domain on 10.43.0.10:53: no such host
+Your laptop resolves the domain just fine. Your phone resolves it. But pods inside your cluster can&rsquo;t. Here&rsquo;s exactly what&rsquo;s happening and how to fix it — including the k3s-specific gotcha that will undo a naive fix.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/fixing-private-dns-resolution-in-k3s/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/fixing-private-dns-resolution-in-k3s/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Fixing Private DNS Resolution in k3s: When Your Home Router Knows But CoreDNS Doesnt
+    </h1>
+    <div class="post-meta"><span title='2026-05-05 20:54:36 +0100 BST'>May 5, 2026</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>If you&rsquo;re running a homelab k3s cluster and have custom DNS entries on your home router — perhaps for a self-hosted service like Authentik — you may have run into this frustrating error:</p>
+<p>dial tcp: lookup authentik.myexample.domain on 10.43.0.10:53: no such host</p>
+<p>Your laptop resolves the domain just fine. Your phone resolves it. But pods inside your cluster can&rsquo;t. Here&rsquo;s exactly what&rsquo;s happening and how to fix it — including the k3s-specific gotcha that will undo a naive fix.
+Understanding the DNS chain</p>
+<p>When a pod needs to resolve a domain, it doesn&rsquo;t ask your router directly. It asks CoreDNS, the cluster-internal DNS server running at 10.43.0.10. CoreDNS then forwards the query upstream. The question is: upstream to where?</p>
+<p>In a default k3s setup, CoreDNS is configured to forward using /etc/resolv.conf from whatever node it&rsquo;s running on. If that node&rsquo;s resolv.conf points to 1.1.1.1 or 8.8.8.8 instead of your router, your private DNS entries are simply invisible to the cluster.</p>
+<p>The chain: Pod → CoreDNS (10.43.0.10) → node&rsquo;s /etc/resolv.conf → upstream DNS. If the upstream isn&rsquo;t your router, private entries are never found.
+Step 1 — Confirm what CoreDNS is forwarding to</p>
+<p>kubectl get configmap coredns -n kube-system -o yaml</p>
+<p>Look for the forward line in the Corefile. You&rsquo;ll likely see:</p>
+<pre tabindex="0"><code>forward . /etc/resolv.conf
+</code></pre><p>This means CoreDNS is reading the upstream from the node&rsquo;s /etc/resolv.conf.
+Step 2 — Check the node&rsquo;s resolv.conf</p>
+<p>Find which node CoreDNS is running on:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods -n kube-system -o wide | grep coredns
+</span></span></code></pre></div><p>SSH into that node and check:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat /etc/resolv.conf
+</span></span></code></pre></div><p>If you see nameserver 1.1.1.1 (Cloudflare) or 8.8.8.8 (Google) — there&rsquo;s your problem. CoreDNS is forwarding to public DNS, which has no knowledge of your private authentik.myexample.domain entry.</p>
+<p>Ubuntu gotcha: On Ubuntu nodes, /etc/resolv.conf often points to 127.0.0.53 (systemd-resolved). CoreDNS can&rsquo;t reach that loopback address from inside the pod network, causing silent failures. Check with resolvectl status.
+Step 3 — Verify your router can actually resolve it</p>
+<p>Before changing anything, confirm the problem is CoreDNS config and not your router:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nslookup authentik.myexample.domain 192.168.1.1
+</span></span></code></pre></div><p>Run this from the master node itself (not inside a pod). If this fails, your router&rsquo;s DNS config is the real issue.
+The fix — and the k3s gotcha</p>
+<p>The obvious approach is to edit the CoreDNS ConfigMap directly. Don&rsquo;t. Here&rsquo;s why.</p>
+<p>k3s manages CoreDNS as a built-in Addon, annotated with:</p>
+<p>objectset.rio.cattle.io/owner-gvk: k3s.cattle.io/v1, Kind=Addon</p>
+<p>Any time k3s restarts or reconciles, it will silently overwrite your changes back to the default. You&rsquo;ll fix it, it&rsquo;ll work, then it&rsquo;ll mysteriously break again after a node reboot.</p>
+<p>The right approach: k3s provides an intentional extension point via import /etc/coredns/custom/*.server in the Corefile. Use that instead.
+The correct fix — ConfigMap approach (recommended)</p>
+<p>The cleanest solution is a separate ConfigMap that k3s mounts into the CoreDNS pod&rsquo;s /etc/coredns/custom/ directory. It survives k3s upgrades, node replacements, and works correctly across multiple master nodes in future:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create configmap coredns-custom <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-n kube-system <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>--from-literal<span style="color:#f92672">=</span>21fx.server<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;myexample.domain {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">forward . 192.168.1.1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">cache 30
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}&#39;</span>
+</span></span></code></pre></div><p>Then restart CoreDNS to pick it up:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl rollout restart deployment/coredns -n kube-system
+</span></span></code></pre></div><p>Why this works: This is a different ConfigMap from the one k3s manages. k3s won&rsquo;t reconcile it. The reload plugin in CoreDNS also picks up changes within ~30 seconds, so future edits don&rsquo;t always need a restart.
+Alternative — drop a file on the node</p>
+<p>If you prefer, you can place a file directly on the master node:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkdir -p /etc/coredns/custom
+</span></span><span style="display:flex;"><span>sudo nano /etc/coredns/custom/21fx.server
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>myexample.domain <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    forward . 192.168.1.1
+</span></span><span style="display:flex;"><span>    cache <span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>This works, but you&rsquo;d need to replicate it to every node if you ever add more masters — whereas the ConfigMap approach lives in etcd and is available cluster-wide automatically.
+Test the fix</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl run dns-debug --image<span style="color:#f92672">=</span>busybox:1.28 --rm -it --restart<span style="color:#f92672">=</span>Never -- <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>nslookup authentik.myexample.domain
+</span></span></code></pre></div><p>You should now see a valid response from your router rather than no such host.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

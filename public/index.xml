@@ -6,8 +6,28 @@
     <description>Recent content on John Mackenzie | Software Engineer</description>
     <generator>Hugo -- 0.129.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 May 2026 20:54:36 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 07 May 2026 14:13:18 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>One Login Is Not Enough</title>
+      <link>http://localhost:1313/posts/one-login-is-not-enough/</link>
+      <pubDate>Thu, 07 May 2026 14:13:18 +0000</pubDate>
+      <guid>http://localhost:1313/posts/one-login-is-not-enough/</guid>
+      <description>One Login Is Not Enough: Adding Multi-Provider OIDC to Kaleb
+The Problem
+Kaleb&amp;rsquo;s original authentication was exactly what you&amp;rsquo;d expect from a project where auth was &amp;ldquo;milestone 1&amp;rdquo;: one OIDC provider, hard-coded through five environment variables, lazily initialised on the first request, and storing raw tokens directly in the session row.
+That design made sense to ship quickly. It stopped making sense the moment we needed a second provider.
+The specific pain points:</description>
+    </item>
+    <item>
+      <title>Fixing Private DNS Resolution in k3s: When Your Home Router Knows But CoreDNS Doesnt</title>
+      <link>http://localhost:1313/posts/fixing-private-dns-resolution-in-k3s/</link>
+      <pubDate>Tue, 05 May 2026 20:54:36 +0100</pubDate>
+      <guid>http://localhost:1313/posts/fixing-private-dns-resolution-in-k3s/</guid>
+      <description>If you&amp;rsquo;re running a homelab k3s cluster and have custom DNS entries on your home router — perhaps for a self-hosted service like Authentik — you may have run into this frustrating error:
+dial tcp: lookup authentik.myexample.domain on 10.43.0.10:53: no such host
+Your laptop resolves the domain just fine. Your phone resolves it. But pods inside your cluster can&amp;rsquo;t. Here&amp;rsquo;s exactly what&amp;rsquo;s happening and how to fix it — including the k3s-specific gotcha that will undo a naive fix.</description>
+    </item>
     <item>
       <title>Making Refresh Tokens Safer with Rotation and Reuse Detection</title>
       <link>http://localhost:1313/posts/making_refresh_tokens_safer_with_rotation_and_reuse_detection/</link>

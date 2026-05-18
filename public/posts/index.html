@@ -111,6 +111,36 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">One Login Is Not Enough
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>One Login Is Not Enough: Adding Multi-Provider OIDC to Kaleb
+The Problem
+Kaleb’s original authentication was exactly what you’d expect from a project where auth was “milestone 1”: one OIDC provider, hard-coded through five environment variables, lazily initialised on the first request, and storing raw tokens directly in the session row.
+That design made sense to ship quickly. It stopped making sense the moment we needed a second provider.
+The specific pain points:...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-07 14:13:18 +0000 UTC'>May 7, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to One Login Is Not Enough" href="http://localhost:1313/posts/one-login-is-not-enough/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Fixing Private DNS Resolution in k3s: When Your Home Router Knows But CoreDNS Doesnt
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>If you’re running a homelab k3s cluster and have custom DNS entries on your home router — perhaps for a self-hosted service like Authentik — you may have run into this frustrating error:
+dial tcp: lookup authentik.21fx.store on 10.43.0.10:53: no such host
+Your laptop resolves the domain just fine. Your phone resolves it. But pods inside your cluster can’t. Here’s exactly what’s happening and how to fix it — including the k3s-specific gotcha that will undo a naive fix....</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-05 20:54:36 +0100 BST'>May 5, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to Fixing Private DNS Resolution in k3s: When Your Home Router Knows But CoreDNS Doesnt" href="http://localhost:1313/posts/fixing-private-dns-resolution-in-k3s/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Making Refresh Tokens Safer with Rotation and Reuse Detection
     </h2>
   </header>
@@ -225,36 +255,12 @@ Find the ID of the PVC that has failed Stop all resources that are using that PV
   <footer class="entry-footer"><span title='2024-12-03 09:26:05 +0000 UTC'>December 3, 2024</span></footer>
   <a class="entry-link" aria-label="post link to All Longhorn replicas are faulted" href="http://localhost:1313/posts/all-longhorn-replicas-are-faulted/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Migration of Longhorn Volume access modes
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>I am unable to change the access_mode of one of my Longhorn volumes from ReadWriteOnce to ReadWriteMany. My plan is thus. To create another volume with the access_mode that I want. Mount both volumes into a bash container and copy the data across. Then mount this new volume in the place of the old volume. Wish me luck.
-Create a New Volume apiVersion: v1 kind: PersistentVolumeClaim metadata: name: some-data-2-persistent-volume-claim spec: accessModes: - ReadWriteMany resources: requests: storage: 100Gi storageClassName: longhorn Create a Temporary Pod apiVersion: v1 kind: Pod metadata: name: data-migration spec: containers: - name: migration-container image: servercontainers/rsync:3....</p>
-  </div>
-  <footer class="entry-footer"><span title='2024-01-24 10:14:05 +0000 UTC'>January 24, 2024</span></footer>
-  <a class="entry-link" aria-label="post link to Migration of Longhorn Volume access modes" href="http://localhost:1313/posts/migration-of-longhorn-volume-access-modes/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Format an HDD for use as a Longhorn Drive
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>I needed to upgrade a drive in one of my kubernetes nodes. Here are the steps that I followed.
-Identify the Disk Run the following command to list all disks:
-lsblk Identify the target HDD you want to format (e.g., /dev/sdb).
-Partition the Disk Launch fdisk to partition the disk:
-sudo fdisk /dev/sdb Inside fdisk run:
-Press d to delete any existing partitions (if any). Press n to create a new partition....</p>
-  </div>
-  <footer class="entry-footer"><span title='2024-01-22 10:14:05 +0000 UTC'>January 22, 2024</span></footer>
-  <a class="entry-link" aria-label="post link to Format an HDD for use as a Longhorn Drive" href="http://localhost:1313/posts/format-an-hdd-for-use-as-a-longhorn-drive/"></a>
-</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="http://localhost:1313/posts/page/2/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
     </main>
     
 <footer class="footer">

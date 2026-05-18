@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>One Login Is Not Enough | John Mackenzie | Software Engineer</title>
+<meta name="keywords" content="">
+<meta name="description" content="One Login Is Not Enough: Adding Multi-Provider OIDC to Kaleb
+The Problem
+Kaleb&rsquo;s original authentication was exactly what you&rsquo;d expect from a project where auth was &ldquo;milestone 1&rdquo;: one OIDC provider, hard-coded through five environment variables, lazily initialised on the first request, and storing raw tokens directly in the session row.
+That design made sense to ship quickly. It stopped making sense the moment we needed a second provider.
+The specific pain points:">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/one-login-is-not-enough/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/one-login-is-not-enough/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="John Mackenzie | Software Engineer (Alt + H)">John Mackenzie | Software Engineer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      One Login Is Not Enough
+    </h1>
+    <div class="post-meta"><span title='2026-05-07 14:13:18 +0000 UTC'>May 7, 2026</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>One Login Is Not Enough: Adding Multi-Provider OIDC to Kaleb</p>
+<p>The Problem</p>
+<p>Kaleb&rsquo;s original authentication was exactly what you&rsquo;d expect from a project where auth was &ldquo;milestone 1&rdquo;: one OIDC provider, hard-coded through five environment variables,
+lazily initialised on the first request, and storing raw tokens directly in the session row.</p>
+<p>That design made sense to ship quickly. It stopped making sense the moment we needed a second provider.</p>
+<p>The specific pain points:</p>
+<p>No concept of &ldquo;identity&rdquo;. The sessions table stored user_sub, id_token, refresh_token, and id_token_expiry. The session was the identity. Adding a second provider meant  <br>
+either a second set of those same columns (bad) or a completely different sessions table per provider (worse).</p>
+<p>Secrets in environment variables. OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_ISSUER_URL — any second provider would require new env vars with different names, with no      <br>
+principled convention for naming them.</p>
+<p>Lazy initialisation was a footgun. The handler called h.init() on every request until OIDC discovery succeeded. This meant the server could start and appear healthy while<br>
+silently refusing to authenticate anyone. With multiple providers that failure mode gets worse — one bad provider would leave users guessing which one was broken.</p>
+<p>Session cookies held UUIDs. The kaleb_session cookie value was the raw session UUID. If an attacker read the DB (SQL injection, backups without encryption at rest), they&rsquo;d<br>
+find a column that could be replayed directly into the cookie.</p>
+<p>No account linking. A user who has both a personal and a work IdP account had no path to merge them. Two providers would mean two separate Kaleb accounts.</p>
+<hr>
+<p>What We Considered</p>
+<p>Option 1: One sessions table row per provider</p>
+<p>Add a provider column to sessions, keep everything else the same. Simple migration, minimal code change.</p>
+<p>Why we rejected it: It doesn&rsquo;t solve account linking. Two sessions from two providers are still two unrelated users. The sessions table continues to store raw tokens, which
+is a security smell. We&rsquo;d be back here in six months.</p>
+<p>Option 2: Single provider_accounts join table</p>
+<p>Add provider_accounts(user_id, provider, sub) and keep the session storing tokens directly.</p>
+<p>This gets us closer — providers are associated with users — but tokens are still stored in plaintext on the session, and every refresh still has to update the session row<br>
+rather than a dedicated token store.</p>
+<p>Option 3: Full identity layer (what we built)</p>
+<p>Introduce identities(provider, issuer, subject) as the stable identity anchor, identity_tokens(identity_id, id_token, encrypted_refresh_token) as the token store, and    <br>
+restructure sessions to reference an identity and store only a hashed opaque token.</p>
+<p>┌───────────────────────────┬───────────────────────────────────────────────┐
+│                           │                    Detail                     │
+├───────────────────────────┼───────────────────────────────────────────────┤
+│ Implementation complexity │ High                                          │
+├───────────────────────────┼───────────────────────────────────────────────┤
+│ Runtime performance       │ +1 DB round trip per auth&rsquo;d request           │
+├───────────────────────────┼───────────────────────────────────────────────┤                                                                                             <br>
+│ Operational burden        │ New encryption key to manage                  │
+├───────────────────────────┼───────────────────────────────────────────────┤                                                                                             <br>
+│ Reversibility             │ Moderate — schema change, but well-structured │
+└───────────────────────────┴───────────────────────────────────────────────┘</p>
+<p>We chose this. The extra DB round trip per request is real, but the security properties are worth it and the read path is indexed.</p>
+<hr>
+<p>The Architecture</p>
+<p>Before</p>
+<p>graph TD
+subgraph Config                                                                                                                                                       <br>
+ENV[OIDC_ISSUER_URL\nOIDC_CLIENT_ID\nOIDC_CLIENT_SECRET]
+end                                                                                                                                                                   <br>
+subgraph Session
+S[sessions\nuser_sub | id_token | refresh_token | id_token_expiry]                                                                                                <br>
+end                                                                                                                                                                   <br>
+subgraph Cookie
+C[kaleb_session = session UUID]                                                                                                                                   <br>
+end                                                                                                                                                                   <br>
+ENV &ndash;&gt; Handler
+Handler &ndash;&gt;|lazy init on first request| Provider[Single OIDC Provider]                                                                                                <br>
+Handler &ndash;&gt; S                                                                                                                                                         <br>
+C &ndash;&gt;|UUID lookup| S</p>
+<p>After</p>
+<p>graph TD                                               <br>
+subgraph Config
+YAML[providers.yaml\nname, issuer_url, scopes]
+ENVK[TOKEN_ENCRYPTION_KEY\nOIDC_CLIENT_ID env refs]                                                                                                               <br>
+end                                                                                                                                                                   <br>
+subgraph Registry                                                                                                                                                     <br>
+R[auth.Registry\nmap provider_name → ProviderRecord\nbuilt at startup]                                                                                            <br>
+end                                                                                                                                                                   <br>
+subgraph Schema
+U[users]                                                                                                                                                          <br>
+I[identities\nprovider | issuer | subject]     <br>
+IT[identity_tokens\nid_token | encrypted_refresh]                                                                                                                 <br>
+S[sessions\ntoken_hash | user_id | identity_id | expires_at]                                                                                                      <br>
+end                                                                                                                                                                   <br>
+subgraph Cookie                                                                                                                                                       <br>
+C[kaleb_session = random token]                                                                                                                                   <br>
+end                                                <br>
+YAML &ndash;&gt; Registry
+ENVK &ndash;&gt; Registry
+Registry &ndash;&gt; Handler
+Handler &ndash;&gt; U                                                                                                                                                         <br>
+Handler &ndash;&gt; I
+Handler &ndash;&gt; IT                                                                                                                                                        <br>
+C &ndash;&gt;|SHA-256| S                                   <br>
+S &ndash;&gt;|identity_id| IT</p>
+<p>Token refresh flow (per request)</p>
+<p>sequenceDiagram                                        <br>
+participant Browser
+participant Middleware as JWTMiddleware                                                                                                                               <br>
+participant SessionRepo
+participant IdentityTokenRepo                                                                                                                                         <br>
+participant IdentityRepo                                                                                                                                              <br>
+participant OIDCProvider</p>
+<pre><code>  Browser-&gt;&gt;Middleware: GET /grpc/... (cookie: raw_token)                                                                                                                  
+  Middleware-&gt;&gt;SessionRepo: GetByTokenHash(sha256(raw_token))
+  SessionRepo--&gt;&gt;Middleware: Session{user_id, identity_id, expires_at}                                                                                                     
+  Middleware-&gt;&gt;IdentityTokenRepo: GetByIdentityID(identity_id)
+  IdentityTokenRepo--&gt;&gt;Middleware: IdentityToken{id_token, encrypted_refresh, expiry}                                                                                      
+  alt ID token not expired                                                                                                                                                 
+      Middleware-&gt;&gt;OIDCProvider: Verify(id_token)
+      OIDCProvider--&gt;&gt;Middleware: ok                                                                                                                                       
+  else ID token expired                                 
+      Middleware-&gt;&gt;Middleware: Decrypt(encrypted_refresh)                                                                                                                  
+      Middleware-&gt;&gt;OIDCProvider: Refresh(refresh_token)                                                                                                                    
+      OIDCProvider--&gt;&gt;Middleware: new_id_token + new_refresh_token
+      Middleware-&gt;&gt;IdentityTokenRepo: Upsert(identity_id, new_id_token, encrypt(new_refresh))                                                                              
+  end                                                                                                                                                                      
+  Middleware-&gt;&gt;Next: context{user_id}                                                                                                                                      
+</code></pre>
+<p>Account linking flow</p>
+<p>sequenceDiagram                                                                                                                                                           <br>
+participant Browser                                <br>
+participant Handler
+participant IdentityRepo
+participant IdentityTokenRepo                                                                                                                                         <br>
+participant OIDCProvider2</p>
+<pre><code>  Browser-&gt;&gt;Handler: GET /auth/link/second (session cookie)                                                                                                                
+  Handler-&gt;&gt;Handler: pkceStore[state] = {providerName: &quot;second&quot;, linkUserID: &lt;current_user_id&gt;}
+  Handler-&gt;&gt;Browser: Redirect to provider2/authorize                                                                                                                       
+  Browser-&gt;&gt;OIDCProvider2: Auth flow                                                                                                                                       
+  OIDCProvider2-&gt;&gt;Browser: /auth/second/callback?code=...                                                                                                                  
+  Browser-&gt;&gt;Handler: GET /auth/second/callback                                                                                                                             
+  Handler-&gt;&gt;IdentityRepo: FindByProviderSub(provider, issuer, sub)
+  alt identity already linked to THIS user                                                                                                                                 
+      Handler--&gt;&gt;Browser: 400 already_linked                                                                                                                               
+  else identity linked to DIFFERENT user                                                                                                                                   
+      Handler--&gt;&gt;Browser: 409 conflict                                                                                                                                     
+  else new identity                                                                                                                                                        
+      Handler-&gt;&gt;IdentityRepo: Create(linkUserID, provider, issuer, sub)                                                                                                    
+      Handler-&gt;&gt;IdentityTokenRepo: Upsert(identity_id, id_token, encrypt(refresh))
+      Handler--&gt;&gt;Browser: redirect /                                                                                                                                       
+  end                                                   
+</code></pre>
+<hr>
+<p>The Implementation</p>
+<p>Provider configuration moves to YAML</p>
+<p>The old internal/config/oidc.go is gone. In its place is providers.yaml and internal/config/providers.go.</p>
+<h1 id="providersyaml">providers.yaml<a hidden class="anchor" aria-hidden="true" href="#providersyaml">#</a></h1>
+<p>providers:</p>
+<ul>
+<li>name: mock
+issuer_url: http://mock-oauth-server:8081/default                                                                                                                     <br>
+internal_issuer_url: http://mock-oauth-server:8080/default                                                                                                            <br>
+client_id_env: OIDC_CLIENT_ID
+client_secret_env: OIDC_CLIENT_SECRET                                                                                                                                 <br>
+scopes: [openid, profile, email, offline_access]   <br>
+email_trust: false                                                                                                                                                    <br>
+enabled: true</li>
+</ul>
+<p>Secrets are never in the YAML file. Each provider declares which environment variable holds its credential. The config loader reads the YAML, then injects from env:</p>
+<p>func injectSecrets(p *ProviderConfig) {                                                                                                                                   <br>
+p.clientID = os.Getenv(p.ClientIDEnv)              <br>
+p.clientSecret = os.Getenv(p.ClientSecretEnv)                                                                                                                         <br>
+}</p>
+<p>clientID and clientSecret are unexported fields. The YAML tags don&rsquo;t exist for them. This isn&rsquo;t security-by-obscurity — it&rsquo;s making it structurally impossible to         <br>
+accidentally serialize credentials back into config.</p>
+<p>Eager discovery at startup</p>
+<p>The old handler called h.init() on every request until the first successful OIDC discovery. We replaced this with auth.BuildRegistry at startup time:</p>
+<p>registry, err := auth.BuildRegistry(ctx, providerCfgs, serverConfig.BaseURL)                                                                                              <br>
+if err != nil {                                                                                                                                                           <br>
+return fmt.Errorf(&ldquo;build OIDC registry: %w&rdquo;, err)
+}</p>
+<p>If any enabled provider&rsquo;s OIDC discovery endpoint is unreachable at startup, the server refuses to start. This is the correct failure mode for a stateless web server —   <br>
+better a clear startup error than runtime auth failures that look like database issues.</p>
+<p>The identities table</p>
+<p>The core data model change. Previously the session stored user_sub — the OIDC sub claim from the provider. That is both provider-specific and tied to the session&rsquo;s lifetime.</p>
+<p>CREATE TABLE identities (                                                                                                                                                 <br>
+id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),                                                                                                                <br>
+user_id    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+provider   TEXT NOT NULL,                                                                                                                                             <br>
+issuer     TEXT NOT NULL,                          <br>
+subject    TEXT NOT NULL,                                                                                                                                             <br>
+UNIQUE(provider, issuer, subject)
+);</p>
+<p>The (provider, issuer, subject) triple is the stable identity anchor. issuer is the OIDC issuer URL from the ID token — not just a name we assign, but what the provider  <br>
+itself claims. This matters because two providers can both issue sub = &ldquo;12345&rdquo; without collision.</p>
+<p>Session restructure: store a hash, not a value</p>
+<p>Previously: session cookie = session UUID. Anyone with read access to the sessions table could forge a valid cookie.</p>
+<p>Now:</p>
+<p>rawCookieToken, _ := generateRandomToken()                                                                                                                                <br>
+h.sessionRepo.Create(ctx, hashToken(rawCookieToken), userID, identityID, expiresAt)</p>
+<p>http.SetCookie(w, &amp;http.Cookie{                                                                                                                                           <br>
+Name:  sessionCookie,                                                                                                                                                 <br>
+Value: rawCookieToken,                             <br>
+})</p>
+<p>The cookie holds the plaintext token. The database stores SHA-256(token). Reading the database doesn&rsquo;t give you the cookie value. This is the same pattern used by Django&rsquo;s<br>
+session framework and GitHub&rsquo;s personal access tokens.</p>
+<p>func hashToken(token string) string {                  <br>
+sum := sha256.Sum256([]byte(token))
+return hex.EncodeToString(sum[:])
+}</p>
+<p>Encrypted refresh tokens</p>
+<p>Refresh tokens are long-lived credentials that can obtain new access. Storing them plaintext is indefensible. We added AES-256-GCM encryption:</p>
+<p>// EncryptToken encrypts plaintext with AES-256-GCM.                                                                                                                      <br>
+// Returns a base64url-encoded string of nonce||ciphertext.                                                                                                               <br>
+func EncryptToken(plaintext string, key []byte) (string, error) {                                                                                                         <br>
+block, _ := aes.NewCipher(key)                                                                                                                                        <br>
+gcm, _ := cipher.NewGCM(block)                                                                                                                                        <br>
+nonce := make([]byte, gcm.NonceSize())                                                                                                                                <br>
+io.ReadFull(rand.Reader, nonce)
+ciphertext := gcm.Seal(nonce, nonce, []byte(plaintext), nil)                                                                                                          <br>
+return base64.URLEncoding.EncodeToString(ciphertext), nil                                                                                                             <br>
+}</p>
+<p>GCM provides authenticated encryption — a tampered ciphertext returns an error at decrypt time, not garbled plaintext. The nonce is prepended to the ciphertext and stored<br>
+with it; there&rsquo;s no nonce management overhead.</p>
+<p>The encryption key is a 32-byte value loaded from TOKEN_ENCRYPTION_KEY (base64-encoded), validated at startup:</p>
+<p>if len(key) != 32 {                                                                                                                                                       <br>
+return nil, fmt.Errorf(&ldquo;TOKEN_ENCRYPTION_KEY must decode to exactly 32 bytes (got %d)&rdquo;, len(key))
+}</p>
+<p>32 bytes = AES-256. The check is explicit because a 16-byte key silently gives you AES-128, and we don&rsquo;t want that to happen accidentally.</p>
+<p>Account linking with email collision detection</p>
+<p>When a user logs in via a new provider for the first time, we check whether their verified email address matches an existing account — but only when the provider is      <br>
+explicitly configured to be trusted (email_trust: true):</p>
+<p>if record.Config.EmailTrust &amp;&amp; claims.EmailVerified &amp;&amp; claims.Email != &quot;&quot; {
+_, emailErr := h.userRepo.GetByEmail(r.Context(), claims.Email)                                                                                                       <br>
+if emailErr == nil {                                                                                                                                                  <br>
+http.Redirect(w, r, &ldquo;/login?error=link_required&amp;provider=&quot;+entry.providerName, http.StatusFound)                                                                  <br>
+return                                                                                                                                                            <br>
+}                                                  <br>
+}</p>
+<p>This redirects the user to the login page with an error rather than silently creating a duplicate account. The email_trust flag is off by default — email claims from most<br>
+providers are not verified in a way we&rsquo;d want to rely on for account merging.</p>
+<p>Unlinking an identity enforces two constraints in the repository layer:</p>
+<p>func (r *identityRepository) Delete(ctx context.Context, id uuid.UUID) error {                                                                                            <br>
+// &hellip;                                                                                                                                                                <br>
+count, _ := r.queries.CountIdentitiesByUserID(ctx, userID)
+if count &lt;= 1 {                                                                                                                                                       <br>
+return ErrCannotDeleteLastIdentity                                                                                                                                <br>
+}                                                                                                                                                                     <br>
+// &hellip;                                                                                                                                                                <br>
+}</p>
+<p>A user cannot unlink their last identity — that would make the account permanently inaccessible.</p>
+<p>Context carries user ID, not the token</p>
+<p>The old middleware put an *oidc.IDToken into the request context. Every handler that wanted the user&rsquo;s ID had to call idToken.Claims(&amp;c) and inspect c.Sub. The new       <br>
+middleware puts a uuid.UUID — the user_id from the session row — directly into context:</p>
+<p>ctx := context.WithValue(r.Context(), UserIDKey, session.UserID)</p>
+<p>Handlers now call auth.UserIDFromContext(r.Context()). No token parsing at the handler layer, no OIDC coupling outside the auth package.</p>
+<hr>
+<p>Tradeoffs &amp; What We Gave Up</p>
+<p>+1 DB round trip per authenticated request. The middleware now reads: session (by token hash), identity token (by identity_id), identity (by identity_id). That&rsquo;s up from one
+read. We have appropriate indexes (idx_sessions_token_hash, idx_identities_user_id) but under heavy load this will be visible in the query plan.</p>
+<p>The encryption key is now a required runtime secret. Rotating it requires re-encrypting every refresh_token_ciphertext in identity_tokens. There&rsquo;s no key versioning here —<br>
+if you rotate the key, old rows become unreadable until re-encrypted. This is a known limitation.</p>
+<p>Lazy OIDC discovery is gone. If you deploy and an OIDC provider&rsquo;s discovery endpoint is down, the server won&rsquo;t start. This is intentional, but it means you can&rsquo;t do rolling
+deploys if providers are flaky. In practice this has been a non-issue with any well-operated IdP.</p>
+<p>The email_trust flag is a footgun if misunderstood. Setting email_trust: true for a provider that does not enforce email verification could allow account takeover. The   <br>
+default is false and the YAML comment warns about it, but there&rsquo;s no machine-readable enforcement.</p>
+<p>PKCE state lives in-memory. The pkceStore is a map[string]pkceEntry guarded by a mutex. In a multi-instance deployment, the auth flow must land on the same instance for both
+the login redirect and the callback. There&rsquo;s a sweep that removes expired entries, but no distributed store. Single-instance for now; this would need Redis or a DB table to
+scale horizontally.</p>
+<hr>
+<p>Testing &amp; Validation</p>
+<p>Unit tests cover:</p>
+<ul>
+<li>BuildRegistry with enabled/disabled/invalid providers</li>
+<li>LoadProviderConfigs validation (missing issuer, missing credentials, duplicate names)</li>
+<li>EncryptToken/DecryptToken round-trips and tamper detection</li>
+<li>Handler login/callback flows with mock repositories</li>
+<li>Account linking and conflict paths</li>
+<li>Unlink guard (last identity protection, fresh-auth check)</li>
+</ul>
+<p>Integration tests (repository/integration/) cover the new IdentityRepository and the restructured SessionRepository against a real PostgreSQL container via testcontainers.</p>
+<p>The middleware tests were updated to reflect that context now carries user_id (UUID) rather than *oidc.IDToken.</p>
+<hr>
+<p>Rollout Considerations</p>
+<p>This branch includes two migrations:</p>
+<ol>
+<li>create_identities_and_identity_tokens — additive, safe to apply before code deployment</li>
+<li>restructure_sessions — begins with TRUNCATE sessions, which invalidates all existing sessions</li>
+</ol>
+<p>All existing users will be logged out on deploy. This is intentional. The session schema is incompatible with the old format and there&rsquo;s no sensible migration path for the<br>
+session contents — the old columns stored raw tokens we no longer want stored that way.</p>
+<p>Monitoring to add after deploy:</p>
+<ul>
+<li>
+<p>identity_tokens rows with expired id_token_expiry that aren&rsquo;t rotating — would indicate the refresh flow is broken</p>
+</li>
+<li>
+<p>identities count per user — if nobody is linking providers, the feature isn&rsquo;t being used</p>
+<hr>
+</li>
+</ul>
+<p>What&rsquo;s Next</p>
+<ul>
+<li>PKCE store distribution — move pkceStore to Redis or a short-TTL DB table to support horizontal scaling</li>
+<li>Token encryption key rotation — build a re-encryption job that accepts old and new key, rewrites all refresh_token_ciphertext rows, then sets the new key as active</li>
+<li>Provider management UI — the frontend has a LinkProvidersPage wired up but it&rsquo;s basic; showing which identities are linked and surfacing the unlink flow with fresh-auth<br>
+re-prompting needs polish</li>
+<li>email_trust audit — the flag is correct but needs documentation in the operator guide explaining exactly when to enable it and what verification guarantees are required<br>
+from the provider</li>
+<li>Session expiry cleanup job — expired sessions accumulate in the table; a background worker or scheduled query should prune them</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">John Mackenzie | Software Engineer</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
